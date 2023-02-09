@@ -32,6 +32,11 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'	//실행시에만 작동, 테스트 환경
 	//JPA 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	//Thymeleaf : View Page , 백엔드에서 처리한 데이터를 .html에 넣어줄 수 있도록 처리해주는 라이브러리
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
 }
 
 tasks.named('test') {

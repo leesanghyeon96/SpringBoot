@@ -9,6 +9,12 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mysite.sbb.answer.Answer;
+import com.mysite.sbb.answer.AnswerRepository;
+import com.mysite.sbb.question.Question;
+import com.mysite.sbb.question.QuestionRepository;
 
 @SpringBootTest
 class SbbApplicationTests {
@@ -18,7 +24,60 @@ class SbbApplicationTests {
 	@Autowired	//객체 자동 주입 (DI) , JPA의 메소드를 사용, findAll(), findById(), save(), delete()
 	private AnswerRepository answerRepository;
 	
-	/* Answer 테이블에 Insert처리 */
+	/* 하나의 질문에 여러개의 답변 찾기 */
+	@Transactional //org에있는것으로 임포트
+		//JUnit에서 오류가발생(실제환경에서는 문제가 없다.) <test에서만 발생
+		//아래의 메소드가 하나의 트랜잭션으로 작동되도록 설정(Test) - 2번이 함께작동되도록
+	@Test
+	public void testjpa8() {
+		//1. Question 테이블에서 질문의 레코드를 얻어온다. 끄집어낸다.
+		Optional<Question> op =
+		this.questionRepository.findById(1);
+		
+		Question q = null;
+		if(op.isPresent()) {
+			q = op.get();	// Question테이블의 id 1번값이 저장
+		}
+		
+		System.out.println(q.getId());
+		System.out.println(q.getContent());
+		System.out.println(q.getSubject());
+		//@Transactional을 처리하지않으면 여기서 끊기고 다시 아래가 작동된다.
+		//@Transactional를 써서 하나로 처리해준다.
+		
+		//2. 끄집어낸 객체의 q.getAnswerList(); <== 끄집어낸 객체의 답변글을 얻어온다.
+		List<Answer> all =
+		q.getAnswerList();	// <= question객체의 answer정보가 저장됨
+			//Question 객체의 AnswerList 컬럼은 List<answer>
+		
+		//3. 출력구문에서 출력한다.
+		for (int i = 0 ; i < all.size() ; i++) {
+			Answer a = all.get(i);
+			System.out.println(a.getId());
+			System.out.println(a.getContent());
+			System.out.println(a.getCreateDate());
+			System.out.println("=======================");
+		}
+	}
+	
+	
+	/* 답변 레코드 하나 가져오기 
+	@Test
+	public void testjpa7() {
+		Optional<Answer> op =
+		this.answerRepository.findById(2);
+		
+		if(op.isPresent()) {	//isPresent() : null->false, not null->true
+			Answer a = op.get();
+			System.out.println(a.getId());
+			System.out.println(a.getContent());
+			System.out.println(a.getCreateDate());
+			//System.out.println(a.getQuestion());
+		}
+	}
+	*/
+	
+	/* Answer 테이블에 Insert처리 
 	@Test
 	public void testAnswerjpa() {
 		//1. Question(부모) 테이블의 답변을 처리할 레코드를 먼저 select 한다. findByid(1)
@@ -34,8 +93,7 @@ class SbbApplicationTests {
 		//3. save 메소드를 사용해서 저장
 		this.answerRepository.save(a);
 	}
-	
-	
+	*/
 	
 	/*=====아래 : Question.java=============================*/
 	

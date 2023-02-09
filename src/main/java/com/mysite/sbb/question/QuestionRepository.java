@@ -1,13 +1,13 @@
-package com.mysite.sbb;
+package com.mysite.sbb.question;
 
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 	// <Question, Integer>
-	// Question : CRUD할 클래스(entity) 이름 , Integer : Question클래스의 pk 컬럼의 데이터 타입
+	// Question : CRUD할(DAO) 클래스(entity) 이름 , Integer : Question클래스의 pk 컬럼의 데이터 타입
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
 	// JPA에서 Question 테이블을 Select, Insert, Update, Delete
-	// JPA의 CRUD메소드 : 
+	// JPA의 CRUD메소드 : 메소드사용 => DB에 맞는 쿼리를 자동으로 처리
 		// save() : Insert, Update, Delete
 		// findAll()
 		// findById()
@@ -21,13 +21,13 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 	// 하나의 컬럼을 조건으로 처리된 값 가져오기 (findBy = where)
 	// findById() : Question 테이블의 Primary Key 컬럼이므로 기본 제공됨
 	
-	// PK,Uk컬럼이 아닌 다른 컬럼을 기준으로 가져오는 방법
+	// PK,Uk컬럼이 아닌 다른 컬럼을 기준으로 가져오는 방법(JPA메소드를사용해쿼리생성)
 	//subject 기준으로 검색시 정의	
 	Question findBySubject(String subject);	//<= 검색 결과가 1개일때 처리
-		// select * from question where subject = ?(subject)
+		// select * from question where subject = ?(String subject)
 	//content 기준으로 검색시 정의
 	Question findByContent(String content);	//<= 검색 결과가 1개일때 처리
-		// select * from question where content = ?(content)
+		// select * from question where content = ?(String content)
 	
 	// 값이 여러개일때 List에 담아줘야한다.
 	List<Question> findBySubjectLike(String subject); //대소문자주의

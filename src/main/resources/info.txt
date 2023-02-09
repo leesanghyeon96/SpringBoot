@@ -48,4 +48,67 @@ JPA는 DB의 테이블 컬럼이 수정, 생성, 삭제 가 빈번하게 발생�
 	- JPARepository 를 상속해서 만들어야한다.
 
 
+====================================================================================
+
+ 실습 : sbb2 프로잭트에서 진행하세요. H2 DataBase를 사용 하세요.  
+     JPA Entity 클래스 실습, JPA 메소드를 사용해서 CRUD , save(), findAll(), 
+ 
+ 아래 내용의 JPA Entity 클래스를 생성 하세요. 
+ 테이블명 : users							<== user 는 예약어 
+      idx   primary key, 자동증가(1,1) 
+      name  varchar(100) 
+      pass  varchar(100) 
+      email varchar(200) 
+      regdate LoacalDateTime 
+      cnt	int 
+      
+ --임의의  값을 5개 insert 
+ --넣은 값을 regdate 컬럼을 기준으로 내림차순( Desc ) 정렬 
+ -- idx 3 번의 name 과 email 주소를 수정 
+ -- idx 4 번의 값을 삭제 
+ 
+ sbb2프로잭트 폴더 압축 : 조명_이름.zip 
+ 업로드 URL : https://url.kr/u86s1c
+ 
+ 
+====================================================================================
+
+Transaction (트랜잭션) : 일(작업)을 처리하는 최소단위
+- 트랜잭션이 시작되면 트랜잭션 완료까지 Lock이 걸림
+- 트랜잭션이 발생되면 SQL Log에 모두 기록이됨.
+- DML문에서 트랜잭션이 발생, (Insert, Update, Delete)
+- 트랜잭션이 발생되고 commit되기 전까지는 RAM에만 적용
+- rollback (트랜잭션 발생시점으로 되돌림)
+- commit (DB에 영구적으로 적용)
+- Oracle Insert, Update, Delete 구문이 발생되면 자동으로 트랜잭션시작
+	- commit;
+- MSSQL, MySQL -> 자동 커밋 트랜잭션 (Statement, preparedStatement)
+- 백업 시점이 아니라 오류가 발생된 시점으로 되돌릴 수 있다.
+- All or Nothing : 되면 전부 완료되게 하거나 원점으로 되돌려 줘야한다.
+
+====================================================================================
+
+<실습>
+프로젝트 : Sbb2
+  - users 테이블에 저장된 레코드를 View Page에서 출력
+  
+  usersRepository 를 Controller에서 생성자 주입
+  
+  client 요청 : http://localhost:0000/user_list
+  view page : users_list.html
+
+  sbb2프로잭트 폴더 압축 : 조명_이름.zip 
+  업로드 URL : https://url.kr/u86s1c
+  
+
+
+
+
+
+
+
+
+
+
+
 
