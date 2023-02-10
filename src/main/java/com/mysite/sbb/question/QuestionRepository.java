@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 	// <Question, Integer>
 	// Question : CRUD할(DAO) 클래스(entity) 이름 , Integer : Question클래스의 pk 컬럼의 데이터 타입
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
-	// JPA에서 Question 테이블을 Select, Insert, Update, Delete
+	// JPA에서 Question 테이블을 Select, Insert, Update, Delete (DAO)
 	// JPA의 CRUD메소드 : 메소드사용 => DB에 맞는 쿼리를 자동으로 처리
 		// save() : Insert, Update, Delete
 		// findAll()

@@ -18,7 +18,7 @@ dependencies {
 		//테스트(Junit)
 	
 	// devtools : 수정 변경시 자동으로 톰캣을 restart(중지 후 다시시작) : 자동 컴파일
-	// development : 실제 서비스로 빌드 할때는 빌드 되지 않도록 설정, 개발시에만 필요함.
+	// developmentOnly : 실제 서비스로 빌드 할때는 빌드 되지 않도록 설정, 개발시에만 필요함.
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	// lombok 라이브러리 등록 (버전을 넣지 않으면 매핑한 버전)
 	compileOnly 'org.projectlombok:lombok'			//컴파일 단계에서만 필요한 경우에 사용됨

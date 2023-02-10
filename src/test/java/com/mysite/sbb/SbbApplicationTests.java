@@ -24,7 +24,43 @@ class SbbApplicationTests {
 	@Autowired	//객체 자동 주입 (DI) , JPA의 메소드를 사용, findAll(), findById(), save(), delete()
 	private AnswerRepository answerRepository;
 	
-	/* 하나의 질문에 여러개의 답변 찾기 */
+	/* Answer 페이블에 더미 데이터 입력 
+	@Test
+	public void insertAnswer() {
+		Question q = new Question();
+		Answer a = new Answer();
+		
+		//Question 객체 질문에 대한 값을 가지고 와서 answer question필드에 넣어준다.
+		Optional<Question> op =
+		this.questionRepository.findById(1);
+		q = op.get();
+		
+		a.setContent("2번 글에대한 답변입니다. - 3");
+		a.setCreateDate(LocalDateTime.now());
+		a.setQuestion(q);
+		
+		this.answerRepository.save(a);
+	}
+	*/
+	
+	/* Question 테이블에 for 문을 사용해서 더미값 1000개 insert */
+	@Test
+	public void insert1000() {
+		Question q = null;	// 여기서 new 해 만들면 하나의 객체를 쓰기에 안된다.(변수선언만)
+		
+		//for 문을 사용해서 레코드 1000개 insert
+		for(int i = 1; i<=1000; i++) {
+			q = new Question();
+			q.setSubject("제목 - " + i);
+			q.setContent("내용 - " + i);
+			q.setCreateDate(LocalDateTime.now());
+			
+			this.questionRepository.save(q);
+		}
+	}
+	
+	
+	/* 하나의 질문에 여러개의 답변 찾기 
 	@Transactional //org에있는것으로 임포트
 		//JUnit에서 오류가발생(실제환경에서는 문제가 없다.) <test에서만 발생
 		//아래의 메소드가 하나의 트랜잭션으로 작동되도록 설정(Test) - 2번이 함께작동되도록
@@ -59,7 +95,7 @@ class SbbApplicationTests {
 			System.out.println("=======================");
 		}
 	}
-	
+	*/
 	
 	/* 답변 레코드 하나 가져오기 
 	@Test
