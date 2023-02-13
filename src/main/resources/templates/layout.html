@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<!-- Bootstrap CSS Import -->
+<link rel="stylesheet" type="text/css" th:href="@{/bootstrap.min.css}">
+
+<title>탬플릿 html (view 페이지생성시 기본적용)</title>
+</head>
+<body>
+
+	<!-- 기본 탬플릿에 삽입할 내용 - Start -->
+	<th:block layout:fragment="content"></th:block>
+	<!-- 기본 탬플릿에 삽입할 내용 - End -->
+
+
+</body>
+</html>

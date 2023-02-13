@@ -5,10 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mysite.sbb.answer.AnswerForm;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor   //final 필드의 생성자를 자동으로 만들어서 생성자를 통한 의존성 주입
@@ -64,7 +69,7 @@ public class QuestionController {
    
    // 상세페이지를 처리하는 메소드 : /question/detail/1
    @GetMapping("question/detail/{id}")
-   public String detail(Model model, @PathVariable("id") Integer id) {
+   public String detail(Model model, @PathVariable("id") Integer id , AnswerForm answerForm) {
             // @PathVariable : 클라이언트에서 넘겨주는 변수값
       Question q =
          this.questionService.getQuestion(id);
@@ -73,5 +78,52 @@ public class QuestionController {
       model.addAttribute("question", q);
       return "question_detail";   //templete - (questoin_detail.html)
    }
+   
+   @GetMapping("/question/create")
+   public String questionCreate(QuestionForm questionForm) {
+	   			 //메소드오버로딩
+	   return "question_form";
+   }
+   
+   // 질문 등록페이지를 처리하는 메소드 : /question/create
+   @PostMapping("/question/create")
+   public String questionCreate(
+		   //@RequestParam String subject, @RequestParam String content
+		   @Valid QuestionForm questionForm, BindingResult bindingResult)
+		    {
+	   			if(bindingResult.hasErrors()) { //subject, content가 비어있을때
+	   				return "question_form";
+	   			}
+	   
+	   //로직 작성부분(Service에서 로직을 만들어서 작동)
+	   //this.questionService.create(subject, content);
+	   this.questionService.create(questionForm.getSubject(), questionForm.getContent());
+	   							//위의 questionForm에 값이 있어get으로 가져온다.
+	   
+	   //값을 DB에 저장후 List페이지로 리다이렉트 (질문 목록으로 이동)
+	   return "redirect:/question/list";
+	 //question/list로 요청하기에 model에 담을 필요가 없다.
+   }
+   
+   
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
 }

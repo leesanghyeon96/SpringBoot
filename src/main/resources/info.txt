@@ -140,9 +140,22 @@ Client ===> Controller ==> Service (비즈니스 로직처리, dto, dao) ==> DAO
 2. UsersService 클래스생성(List에 담아 테이블의 정보를 가져오는 메소드 생성)
 3. Controller에서 Repository가 아닌 Service로 바꾸기
 -> localhost:9999/users/list
-4. 
+4. <a>로 인풋 페이지(users_insert) 생성 (action을 form에 담기)
+5. service에 인풋값을 저장하는 메소드 생성
+6. controller를 통해 값을 넣기
  	
- 	
+====================================================================================
+Spring Framework를 사용한 폼 태그 내의 유효성 검사
+1. 라이브러리 등록 :
+	build.gradle에 등록
+			// Spring에서 제공해주는 유효성 검사 라이브러리 : form에서 반값이나 글자수 제한
+			implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+			
+2. 유효성 검사 클래스 생성 (QuestionForm.java)
+	@Getter
+	@Setter
+	
+	유효성 검사 필드 : subject, content
  	
  	
  	

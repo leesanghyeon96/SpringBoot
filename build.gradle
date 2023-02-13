@@ -36,7 +36,10 @@ dependencies {
 	//Thymeleaf : View Page , 백엔드에서 처리한 데이터를 .html에 넣어줄 수 있도록 처리해주는 라이브러리
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
-
+	
+	//Stpring에서 제공해주는 유효성 검사 라이브러리 : form에서 빈값이나 글자수 제한
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
 }
 
 tasks.named('test') {
