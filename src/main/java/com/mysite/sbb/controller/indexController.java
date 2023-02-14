@@ -10,7 +10,7 @@ public class indexController {
 	@GetMapping("/")	// http://localhost:9898 = /
 	public String index() {
 		
-		return "index";
+		return "redirect:/question/list";
 	}
 	// 사용자가 localhost:9898/라고 요청하면 index라고 리턴 ->index.html열림
 	

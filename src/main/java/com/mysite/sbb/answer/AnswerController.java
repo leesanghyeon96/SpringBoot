@@ -53,10 +53,4 @@ public class AnswerController {
 			//본인페이지
 	}
 	
-	
-	
-	
-	
-	
-	
 }

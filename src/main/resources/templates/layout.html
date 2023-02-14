@@ -11,11 +11,16 @@
 <title>탬플릿 html (view 페이지생성시 기본적용)</title>
 </head>
 <body>
-
-	<!-- 기본 탬플릿에 삽입할 내용 - Start -->
+	<!-- 최상단의 네이게이션 바 (Nav Bar) 생성 -->
+	<!-- 외부의 navbar.html import -->
+	<nav th:replace="~{navbar::navbarfragment}"></nav>
+	
+	<!-- 기본 탬플릿에 삽입할 내용 - Start --> 
 	<th:block layout:fragment="content"></th:block>
 	<!-- 기본 탬플릿에 삽입할 내용 - End -->
-
-
+	
+	<!-- 부트스트랩 자바 스크립트 import -->
+	<script th:src="@{/bootstrap.min.js}"></script>
+	
 </body>
 </html>

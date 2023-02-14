@@ -3,6 +3,7 @@ package com.mysite.sbb.question;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,7 +47,7 @@ public class QuestionController {
          //인터페이스 하위의 클래스가 많아지면 충돌이 발생될 수 있다.(Autowired)
    private final QuestionService questionService;
    
-   @GetMapping("/question/list")   //http://localhost:9898/question/list
+/*   @GetMapping("/question/list")   //http://localhost:9898/question/list
    @PostMapping("/question/list")   //form 태그의 method=post action="question/list"
    //@ResponseBody      //요청을 요청한 브라우저에 출력
       //생략하면 templates의 뷰를 출력
@@ -65,7 +66,25 @@ public class QuestionController {
       model.addAttribute("questionList", questionList);
       
       return "question_list";
+   } */
+   
+   // 2월 4일 페이징처리를 위해 수정됨
+   // htttp://localhost:9898/question/list/?page=0
+   @GetMapping("question/list")
+   public String list(Model model, @RequestParam (value="page", defaultValue="0") int page) {
+	   										// page에 들어오는 값이 int로 변환되어 page로 들어간다.
+	   // 비즈니스 로직 처리 : 
+	   Page<Question> paging = 
+	   		this.questionService.getList(page);
+	   
+	   //model 객체에 결과로 받은 paging 객체를 client로 전송
+	   model.addAttribute("paging", paging);
+	   
+	   return "question_list";
    }
+   
+   
+   
    
    // 상세페이지를 처리하는 메소드 : /question/detail/1
    @GetMapping("question/detail/{id}")
@@ -79,8 +98,12 @@ public class QuestionController {
       return "question_detail";   //templete - (questoin_detail.html)
    }
    
+   
+   
    @GetMapping("/question/create")
    public String questionCreate(QuestionForm questionForm) {
+	   //위의QuestionForm questionForm를 넣지 않으면 form페이지의
+	   //th:object="${questionForm}"(오류처리)를 받아오지 못해 오류가 난다.
 	   			 //메소드오버로딩
 	   return "question_form";
    }
@@ -90,6 +113,7 @@ public class QuestionController {
    public String questionCreate(
 		   //@RequestParam String subject, @RequestParam String content
 		   @Valid QuestionForm questionForm, BindingResult bindingResult)
+   			//@RequestParam으로 받아야할 변수의 값이 많을 경우 위처럼 객체를 만들어 처리
 		    {
 	   			if(bindingResult.hasErrors()) { //subject, content가 비어있을때
 	   				return "question_form";
@@ -104,26 +128,5 @@ public class QuestionController {
 	   return "redirect:/question/list";
 	 //question/list로 요청하기에 model에 담을 필요가 없다.
    }
-   
-   
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
    
 }
