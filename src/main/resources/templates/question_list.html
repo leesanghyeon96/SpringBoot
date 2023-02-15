@@ -40,9 +40,20 @@
           -->
          <td th:text="${paging.getTotalElements - (paging.number*paging.size) - Loop.index}">번호</td>
          
+         
+         
          <td> <a th:href="@{|detail/${question.id}|}">[[${question.subject}]] </a>
          			<!-- String값   변수값 -->
+         	  <span class="text-danger small ms-2"
+         	  		th:if="${#lists.size(question.answerList) > 0}"
+         	  		th:text="${#lists.size(question.answerList)}">
+         	  </span>
+         
          </td> 
+         
+         
+         
+         
          <!-- question/detail : 요청페이지 -->
          <td> [[${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}]] </td>
       </tr>
