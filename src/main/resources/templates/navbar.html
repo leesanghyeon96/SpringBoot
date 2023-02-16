@@ -1,20 +1,41 @@
 <nav th:fragment="navbarfragment" 
 	class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+	
 	<div class="container-fluid"> 
+		
 		<a class ="navbar-brand"href="/question/list">SBB</a>
+		
 		<button class ="navbar-toggler"type="button" data-bs-toggle="collapse"
 			data-bs-target="#navbarSupportedContent"
+			
 			aria-controls="navbarSupportedContent" aria-expanded="false"
 			aria-label="Toggle navigation"> 
+			
 			<span class="navbar-toggler-icon"></span>
+			
 		</button>
+		
+		
 		<div class ="collapse navbar-collapse"id="navbarSupportedContent">
+			
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0"> 
+				
 				<li class="nav-item">
-					<a class ="nav-link"href="#">로그인</a>
+					
+					<!-- 
+						sec:authorize="isAnonymous()" : 현재 로그아웃된 상태
+						sec:authorize="isAuthenticated()" : 현재 로그인된 상태
+					 -->
+					<a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
+						<!-- sec:authorize : 스프링 서큐리티에서 isAnonymous()(비로그인) 상태일때 text를 출력 --> <!-- get방식 -->
+					<a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
+						<!-- sec:authorize : 스프링 서큐리티에서 isAuthenticated()(로그인) 상태일때 text를 출력 -->
 				</li>
+				
 				 <li class="nav-item">
+				 
  					<a class="nav-link" th:href="@{/user/signup}">회원가입</a>
+ 				
  				</li>
 			</ul>
 		</div>

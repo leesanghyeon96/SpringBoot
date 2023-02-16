@@ -57,4 +57,16 @@ public class UserController {
 		return "redirect:/";
 	}
 	
+	//스프링 시큐리티에 로그인 URL 을 /user/login으로 설정했으므로 해당 매핑 추가
+	//2월 16일 로그인 요청에 대한 login_form.html 뷰 페이지 전송
+	@GetMapping("/login")
+	public String login() {
+		return "login_form";
+	}
+	//실제 로그인을 진행하는 @postMapping 방식의 메소드는 스프링 시큐리티가 대신 처리하므로
+	//직접 구현할 필요가 없다.
+	
+	
+	
+	
 }
