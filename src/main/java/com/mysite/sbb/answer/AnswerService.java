@@ -49,9 +49,14 @@ public class AnswerService {
    
    //답변수정
    public void modify(Answer answer, String content) {
+	   
+	   //
+	   System.out.println("기존의 답변을 수정함");
+	   
 	   answer.setContent(content);
 	   answer.setModifyDate(LocalDateTime.now());
 	   this.answerRepository.save(answer);
+	   	//save()=> insert,update
    }
    
    
@@ -61,7 +66,11 @@ public class AnswerService {
    }
    
    
-   
+   //2월17일 답변에 추천인을 저장하기위한 메소드 생성
+   public void vote(Answer answer, SiteUser siteUser) {
+	   answer.getVoter().add(siteUser);
+	   this.answerRepository.save(answer);
+   }
    
    
    

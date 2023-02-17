@@ -1,6 +1,7 @@
 package com.mysite.sbb.answer;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import com.mysite.sbb.question.Question;
 import com.mysite.sbb.user.SiteUser;
@@ -10,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,15 +40,17 @@ public class Answer {
 
 	//여러개의 질문이 한명의 사용자에게 작성될 수 있으므로 @ManyToOne 관계가 성립된다.
 	//답변정보
-	@ManyToOne			//foreign key, SiteUser를 참조해서 값을 넣는다.
+	@ManyToOne			//foreign key, SiteUser테이블의 ID값을 참조해서 가지고있다.
 	private SiteUser author;
 
 	//언제 수정되었는지 확인할 수 있도록
 	private LocalDateTime modifyDate;
 
 
-
-
+	// 2월17일 추천을 위해 추가함
+	@ManyToMany
+	Set<SiteUser> voter;
+	//이것 역시 중복 추천을 방지하기 위해 List가 아닌 Set으로 했다.
 
 
 

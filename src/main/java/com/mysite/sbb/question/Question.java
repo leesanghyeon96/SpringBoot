@@ -2,19 +2,21 @@ package com.mysite.sbb.question;
 
 import java.time.LocalDateTime;	//자신의 시스템의 로컬의 시간설정
 import java.util.List;
+import java.util.Set;
 
 import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
 
-import jakarta.persistence.CascadeType;	
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 //persistence : JPA에서 사용된 어노테이션
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -58,15 +60,20 @@ public class Question {	//클래스이름 : 테이블이름
 	
 	
 	//여러개의 질문이 한명의 사용자에게 작성될 수 있으므로 @ManyToOne관계가 성립한다.
-	@ManyToOne	// Foreign key : site_user 테이블의 Primary Key 참조
+	@ManyToOne	// Foreign key : site_user 테이블의 Primary Key 참조하고있다.
 	private SiteUser author;
+		//getAuthor().getUserName()
+			//getAuthor() : SiteUser객체
+			//.getusername() : 유저정보를 가져온다.
 	
 	//언제 수정되었는지 확인할 수 있도록
 	private LocalDateTime modifyDate;
 	
 	
-	
-	
-	
+	// 2월 17일 추천을 위해 추가함
+	@ManyToMany	
+	Set<SiteUser> voter;
+	// List가 아닌 Set으로 한 이유는 추천인의 중복을 방지하기 위함이다.
+		//@ManyToMany 관계로 속성을 생성하면 새로운 테이블을 생성해 관리한다.
 	
 }

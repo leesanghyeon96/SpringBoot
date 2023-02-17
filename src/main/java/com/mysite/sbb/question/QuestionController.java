@@ -82,14 +82,20 @@ public class QuestionController {
    // 2월 14일 페이징처리를 위해 수정됨
    // htttp://localhost:9898/question/list/?page=0
    @GetMapping("question/list")
-   public String list(Model model, @RequestParam (value="page", defaultValue="0") int page) {
+   public String list(Model model, @RequestParam (value="page", defaultValue="0") int page,
+		   
+		   //2월 17일 추가함
+		   @RequestParam(value = "kw", defaultValue = "") String kw) {
 	   										// page에 들어오는 값이 int로 변환되어 page로 들어간다.
 	   // 비즈니스 로직 처리 : 
 	   Page<Question> paging = 
-	   		this.questionService.getList(page);
+	   		this.questionService.getList(page,kw);
 	   
 	   //model 객체에 결과로 받은 paging 객체를 client로 전송
 	   model.addAttribute("paging", paging);
+	   
+	   //2월 17일 추가함
+	   model.addAttribute("kw", kw);
 	   
 	   return "question_list";
    }
@@ -98,7 +104,7 @@ public class QuestionController {
    
    
    // 상세페이지를 처리하는 메소드 : /question/detail/1
-   @GetMapping("question/detail/{id}")
+   @GetMapping("question/detail/{id}") //{id}하면 파라미터로 값을 돌려줄 수 있다.
    public String detail(Model model, @PathVariable("id") Integer id , AnswerForm answerForm) {
             // @PathVariable : 클라이언트에서 넘겨주는 변수값
       Question q =
@@ -112,7 +118,7 @@ public class QuestionController {
    
    
    @PreAuthorize("isAuthenticated()")	//로그인시에만 접근 가능하도록 설정
-   @GetMapping("/question/create")
+   @GetMapping("/question/create")	//뷰페이지로 던져줌
    public String questionCreate(QuestionForm questionForm) {
 	   //위의QuestionForm questionForm를 넣지 않으면 form페이지의
 	   //th:object="${questionForm}"(오류처리)를 받아오지 못해 오류가 난다.
@@ -121,22 +127,29 @@ public class QuestionController {
    }
    
    // 질문 등록페이지를 처리하는 메소드 : /question/create
- //2월 16일 : Principal principal 추가됨
-   @PreAuthorize("isAuthenticated()")
-   @PostMapping("/question/create")
+   //2월 16일 : Principal principal 추가됨 : 로그온한 사용자의 정보를 게더링
+   @PreAuthorize("isAuthenticated()") //로그인 시에만 접근 가능하도록 설정
+   @PostMapping("/question/create")	//이 요청이 들어올때 바로 위의 인증을 거쳐야한다.
    public String questionCreate(
 		   //@RequestParam String subject, @RequestParam String content
 		   @Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal)
-   			//@RequestParam으로 받아야할 변수의 값이 많을 경우 위처럼 객체를 만들어 처리
+   				//questionForm에 subject, content가 들어간다.
+   				//@RequestParam으로 받아야할 변수의 값이 많을 경우 위처럼 객체를 만들어 처리
 		    {
 	   			if(bindingResult.hasErrors()) { //subject, content가 비어있을때
 	   				return "question_form";
 	   			}
 	   
-	   	
+	   	//현재 로그온한 사용자정보를 확인해보기
+	   			//System.out.println("현재 로그온한 사용자 정보 : " + principal.getName());
+	   			
+	   		//로직 작성부분 (Service에서 로직을 만들어서 작동)
+	   		//this.questionService.create(subject, content);
+	   			
+	   	//2월 16일 추가 항목
 	   	SiteUser siteUser = this.userService.getUser(principal.getName());		
-	   			
-	   			
+	   			//principal.getName() : 현재 로그온한 계정정보를 게더링함
+	   			//이를 조건으로 객체를 뽑아낸다.
 	   			
 	   //로직 작성부분(Service에서 로직을 만들어서 작동)
 	   //this.questionService.create(subject, content);
@@ -215,7 +228,16 @@ public class QuestionController {
 	   return "redirect:/";
    }
    
-   
+   //2월 17일 추천을 위한 메소드 생성
+   @PreAuthorize("isAuthenticated()") //로그인한 사람만 가능
+   @GetMapping("/question/vote/{id}")
+   public String questionVote(Principal principal, @PathVariable("id") Integer id) {
+	   Question question = this.questionService.getQuestion(id);
+	   SiteUser siteUser = this.userService.getUser(principal.getName());
+	   this.questionService.vote(question, siteUser);
+	   
+   return String.format("redirect:/question/detail/%s", id);
+   }
    
    
    

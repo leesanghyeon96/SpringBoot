@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 	// <Question, Integer>
 	// Question : CRUD할(DAO) 클래스(entity) 이름 , Integer : Question클래스의 pk 컬럼의 데이터 타입
 public interface QuestionRepository extends JpaRepository<Question, Integer> {
@@ -30,6 +33,9 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 	//content 기준으로 검색시 정의
 	Question findByContent(String content);	//<= 검색 결과가 1개일때 처리
 		// select * from question where content = ?(String content)
+	
+	//2월 17일 추가
+	Question findBySubjectAndContent(String subject, String content);
 	
 	// 값이 여러개일때 List에 담아줘야한다.
 	List<Question> findBySubjectLike(String subject); //대소문자주의
@@ -66,4 +72,23 @@ public interface QuestionRepository extends JpaRepository<Question, Integer> {
 	Page<Question> findAll(Pageable pageable);
 	// page는 list와 비슷하다.
 	
-}
+	//2월 17일 추가
+	Page<Question> findAll(Specification<Question> spec, Pageable pageable);
+	
+	//2월 17일 추가
+	// @Query
+	 @Query("select "
+			 + "distinct q "
+			 + "from Question q " 
+			 + "left outer join SiteUser u1 on q.author=u1 "
+			 + "left outer join Answer a on a.question=q "
+			 + "left outer join SiteUser u2 on a.author=u2 "
+			 + "where "
+			 + " q.subject like %:kw% "
+			 + " or q.content like %:kw% "
+			 + " or u1.username like %:kw% "
+			 + " or a.content like %:kw% "
+			 + " or u2.username like %:kw% ")
+			 Page<Question> findAllByKeyword(@Param("kw") String kw, Pageable pageable);
+	 }
+

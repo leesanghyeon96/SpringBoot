@@ -6,8 +6,10 @@
 	<h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
 	<div class="card my-3">
 		<div class="card-body">
-			<div class="card-text" style="white-space: pre-line;"
-				th:text="${question.content}"></div>
+		
+			<!-- 2월 17일 마크다운 적용 -->
+			<div class="card-text" th:utext="${@commonUtil.markdown(question.content)}"></div>
+				
 			<div class="d-flex justify-content-end">
 			
 				<!-- 2월 16일 : 수정일시 표시하기 -->
@@ -21,6 +23,7 @@
 					<!-- 2월 16일 : 질문상세 템플릿 글쓴이 추가 -->
 					<div class="mb-2">
 						<span th:if="${question.author != null}" th:text="${question.author.username}"></span>
+						<span th:if="${question.author != null}" th:text="${question.author.email}"></span>
 					</div>
 					
 					<div th:text="${#temporals.format(question.createDate, 'yyyy-MM-dd HH:mm')}">
@@ -34,6 +37,21 @@
 				#authentication.getPrincipal()은 Principal객체를 리턴하는 타임리프의 유틸리티이다.
 			-->
 			<div class="my-3">
+			
+			<!-- 2월17일 질문 추천버튼 생성 -->
+			<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+			 th:data-uri="@{|/question/vote/${question.id}|}">
+			 추천
+			 <span class="badge rounded-pill bg-success" th:text="${#lists.size(question.voter)}"></span>
+			 </a>
+			
+					<!-- 삭제버튼 추가 -->
+					<!-- sec:authorize="isAuthenticated()" 인증이 되면
+					앞의 question.author : DB의값
+					#authentication.getPrincipal()(인증을받으면인증정보가왼쪽객체안에들어있다.).getUsername() : 세션의값(로그온한)
+					question.author : SiteUser객체(DB)
+					question.author.username : user객체 안의 username값을 가져온다.
+					 -->
 				<a th:href="@{|/question/modify/${question.id}|}" class="btn btn-sm btn-outline-secondary"
  					
  					sec:authorize="isAuthenticated()"
@@ -67,9 +85,17 @@
 	-->
 	<!-- 답변 반복 시작 -->
 	<div class="card my-3" th:each="answer : ${question.answerList}">
+		
+		<!-- 2월 17일 답변 앵커태그 추가 
+		앵커태그의 id는 유일한 값이어야한다. -->
+		<a th:id="|answer_${answer.id}"></a>
+		
 		<div class="card-body">
+		
+			<!-- 2월 17일 마크다운 적용 -->
 			<div class="card-text" style="white-space: pre-line;"
 				th:text="${answer.content}"></div>
+				
 			<div class="d-flex justify-content-end">
 			
 				<!-- 2월 16일 답변날짜 추가 -->
@@ -92,6 +118,15 @@
 			
 			<!-- 답변수정 -->
 			<div class="my-3">
+			
+			<!-- 2월17일 답변 추천버튼 생성 -->
+			<a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
+			 th:data-uri="@{|/answer/vote/${answer.id}|}">
+			 추천
+			 <span class="badge rounded-pill bg-success" th:text="${#lists.size(answer.voter)}"></span>
+			 </a>
+			
+			<!-- 2월 16일 질문 수정버튼 생성 -->
 			 <a th:href="@{|/answer/modify/${answer.id}|}" class="btn btn-sm btn-outline-secondary"
 			 
 			 sec:authorize="isAuthenticated()"
@@ -147,14 +182,22 @@
 </div>
 <!-- 2월 16일 JavaScript 추가 블락 -->
 <script layout:fragment="script" type='text/javascript'>
-	const delete_elements = document.getElementsByClassName("delete");
-	Array.from(delete_elements).forEach(function(element) {
-		element.addEventListener('click', function() {
-			if(confirm("정말로 삭제하시겠습니까?")) {
-				location.href = this.dataset.uri;
-			};
-		});
+const delete_elements = document.getElementsByClassName("delete");
+Array.from(delete_elements).forEach(function(element) {
+	element.addEventListener('click', function() {
+		if(confirm("정말로 삭제하시겠습니까?")) {
+			location.href = this.dataset.uri;
+		};
 	});
+});
+const recommend_elements = document.getElementsByClassName("recommend");
+Array.from(recommend_elements).forEach(function(element) {
+	element.addEventListener('click', function() {
+		if(confirm("정말로 추천하시겠습니까?")) {
+			location.href = this.dataset.uri;
+		};
+	});
+});
 </script>
 
 </html>

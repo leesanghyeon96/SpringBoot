@@ -42,15 +42,15 @@ public class AnswerController {
 			//<<validation 전 구성>>
 			//Model model, @PathVariable("id") Integer id,@RequestParam String content
 			
-			//content의 유효성 검사
-			Model model, @PathVariable("id") Integer id,	//@RequestParam으로 받는것이 아닌 validation을 통해 받는다.
-			@Valid AnswerForm answerForm, BindingResult bindingResult, 
-			Principal principal
-			//2월 16일 추가 작성
-			// 현재 로그인한 사용자에 대한 정보를 알기 위해서는 스프링 시큐리티가 제공하느 Principal 객체를 사용
-			// principal.getName()을 호출하면 현재 로그인한 사용자의 사용자명(사용자ID)을 알 수 있다.
-			) {
-				// 위의 content <= form 에서 넘어오는 name값 (값이 여러개면 ,@Reque.. 로 )
+		//content의 유효성 검사
+		Model model, @PathVariable("id") Integer id,	//@RequestParam으로 받는것이 아닌 validation을 통해 받는다.
+		@Valid AnswerForm answerForm, BindingResult bindingResult, 
+		Principal principal
+		//2월 16일 추가 작성
+		// 현재 로그인한 사용자에 대한 정보를 알기 위해서는 스프링 시큐리티가 제공하느 Principal 객체를 사용
+		// principal.getName()을 호출하면 현재 로그인한 사용자의 사용자명(사용자ID)을 알 수 있다.
+		) {
+			// 위의 content <= form 에서 넘어오는 name값 (값이 여러개면 ,@Reque.. 로 )
 		
 		Question question = this.questionService.getQuestion(id);
 		// 답변 내용을 저장하는 메소드 호출 (Service에서 호출)
@@ -65,11 +65,18 @@ public class AnswerController {
 			return "question_detail";	//뷰페이지에 남아있도록 처리
 		}
 		
+		//2월 17일 앵커태그 추가
+		Answer answer = 
 		//답변 내용을 저장하는 메소드 호출(service에서 호출)
 		this.answerService.create(question, answerForm.getContent(), siteUser);
 		
 		
-		return String.format("redirect:/question/detail/%s", id);
+		//2월 17일 답변 작성, 수정, 추천을 할 경우 앵커로 포커스하기 위해 수정
+		return String.format("redirect:/question/detail/%s#answer_%s", 
+				 answer.getQuestion().getId(), answer.getId());
+		
+		
+		//return String.format("redirect:/question/detail/%s", id);
 							// id변수를 %s에 주입
 		//redirect : 클라이언트가 서버에게 재요청(View페이지가 아님)
 			//본인페이지
@@ -95,15 +102,22 @@ public class AnswerController {
 	@PostMapping("/modify/{id}")
 	public String answerModify(@Valid AnswerForm answerForm, BindingResult bindingResult,
 			@PathVariable("id") Integer id, Principal principal) {
+		
 		if(bindingResult.hasErrors()) {
 			return "answer_form";
 		}
+		
 		Answer answer = this.answerService.getAnswer(id);
+		
 		if(!answer.getAuthor().getUsername().equals(principal.getName())) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
 		}
+		
 		this.answerService.modify(answer, answerForm.getContent());
-		return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+		
+		//답변 작성, 수정, 추천을 할 경우 앵커로 포커스하기 위해 수정
+		return String.format("redirect:/question/detail/%s#answer_%s", 
+				 answer.getQuestion().getId(), answer.getId());
 	}
 	
 	//답변삭제
@@ -123,8 +137,18 @@ public class AnswerController {
 	}
 	
 	
-	
-	
+	//2월 17일 추천버튼 클릭시 호출되는 URL을 처리하기위해 메소드 생성
+	@PreAuthorize("isAuthenticated()")
+	@GetMapping("/vote/{id}") //위에서 @RequestMapping("/answer")이므로 이렇게만
+	public String answerVote(Principal principal, @PathVariable("id") Integer id) {
+		Answer answer = this.answerService.getAnswer(id);
+		SiteUser siteUser = this.userService.getUser(principal.getName());
+		this.answerService.vote(answer, siteUser);
+		
+		//답변 작성, 수정, 추천을 할 경우 앵커로 포커스하기 위해 수정
+		return String.format("redirect:/question/detail/%s#answer_%s", 
+				 answer.getQuestion().getId(), answer.getId());
+	}
 	
 	
 	
