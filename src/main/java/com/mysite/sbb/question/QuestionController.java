@@ -228,12 +228,16 @@ public class QuestionController {
 	   return "redirect:/";
    }
    
+   //id : Question 객체
+   //principal : 현재 투표하는 객체를 가지고옴
    //2월 17일 추천을 위한 메소드 생성
    @PreAuthorize("isAuthenticated()") //로그인한 사람만 가능
    @GetMapping("/question/vote/{id}")
    public String questionVote(Principal principal, @PathVariable("id") Integer id) {
+	   //id 번호에 대한 question 객체
 	   Question question = this.questionService.getQuestion(id);
 	   SiteUser siteUser = this.userService.getUser(principal.getName());
+	   	//로그인 사용자의 정보를 가지고 siteUser를 뽑아낸다.
 	   this.questionService.vote(question, siteUser);
 	   
    return String.format("redirect:/question/detail/%s", id);

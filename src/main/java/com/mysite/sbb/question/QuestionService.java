@@ -106,8 +106,10 @@ public class QuestionService {
 	
 	//2월 17일 추천인을 저장하기 위한 메소드 생성
 	public void vote(Question question, SiteUser siteUser) {
-		 question.getVoter().add(siteUser);
-		 this.questionRepository.save(question);
+		// question.getVoter() : 테이블의 set
+		question.getVoter().add(siteUser);
+			//set<SiteUesr> voter 에 siteUser를 넣는다.
+		this.questionRepository.save(question);
 	}
 	
 	

@@ -206,7 +206,56 @@ Page 117 ~ 158 Page
 3 - 13 마크다운
 3 - 14 검색
 
+====================================================================================
+검색 기능 사용
+ - 제목으로 검색 : Question <subject>
+ - 내용으로 검색 : Question<content>
+ - 사용자 이름으로 검색 : SiteUser <username>
+ - 답변으로 검색 : Answer<content>
 
+-- question 테이블의 제목(subject)를 기준으로 검색
+select * from question
+where subject like '%스프링%';
+
+-- question 테이블의 내용(content)를 기준으로 검색
+select * from quesiton
+where conten like '%스프링%';
+
+-- answer 테이블의 답변내용(content)를 기준으로 검색
+select * from answer
+where content like '%스프링%';
+
+-- answer 테이블과 site_user 테이블을 Inner Join 해서 content 컬럼의 값이 
+   '스프링'이 적용된 내용만 출력
+select * from answer a
+join site_user s
+on a.author_id = s.id
+where content like '%스프링%';
+
+-- 하나의 검색 변수 값으로 여러 테이블의 컬럼을 검색함. (JOIN)
+select
+    distinct q.id,	<= 중복제거
+    q.author_id,
+    q.content,
+    q.subject,
+    q.modify_date
+from question q
+    left outer Join site_user u1	left outer Join:왼쪽테이블전부출력
+      on q.author_id = u1.id		<= 공통 키 컬럼
+    
+    left outer Join answer a
+      on q.id = a.question_id
+
+    left outer Join site_user u2
+      on a.author_id = u2.id
+
+where
+    q.subject like '%스프링(변수값)%'
+    or q.content like '%스프링(변수값)%'
+    or a.content like '%스프링(변수값)%'
+    or u1.username like '%스프링(변수값)%'	-- question author_id
+    or u2.username like '%스프링(변수값)%'	-- answer author_id
+====================================================================================
 
 
 

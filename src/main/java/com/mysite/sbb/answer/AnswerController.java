@@ -147,6 +147,8 @@ public class AnswerController {
 		
 		//답변 작성, 수정, 추천을 할 경우 앵커로 포커스하기 위해 수정
 		return String.format("redirect:/question/detail/%s#answer_%s", 
+				//%s에 answer.getQuestion().getId()가, 
+				//answer_%s의 %s에 answer.getId()가 들어간다.
 				 answer.getQuestion().getId(), answer.getId());
 	}
 	
