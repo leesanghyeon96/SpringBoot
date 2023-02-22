@@ -1,0 +1,112 @@
+// ls -l <= 자세한 정보를 출력, 폴더/파일/링크, 퍼미션(권한), 소유주, 그룹, 언제, 용량
+
+drwxr-x--- 4 ubuntu ubuntu 4096 Feb 22 10:04 ubuntu
+			  소유주   그룹
+
+d: 폴더
+-: 파일
+l: 링크 파일
+
+rwxrwxrwx <= 모든 권한
+
+r : 읽기 권한 : 4
+w : 쓰기 권한 : 2
+x : 실행 권한 : 1
+
+rwx
+
+// chmod : 퍼미션 수정
+chmod 777 aaa.txt
+-rwxrwxrwx 1 ubuntu ubuntu 0 Feb 22 10:49 aaa.txt
+
+//chown 소유주와 그룹 변경
+sudo chown root.root aaa.txt
+-rwxrwxrwx 1 root root 0 Feb 22 10:49 aaa.txt
+
+
+
+vi start.sh 수정 : 실행시 application-prod.properties 실행
+===========================
+#!/bin/bash
+
+JAR=sbb-0.0.1-SNAPSHOT.jar
+LOG=/home/ubuntu/sbb/sbb.log
+
+nohup java Dspring.profile.active=prod -jar $JAR > $LOG 2>&1 &
+===========================
+
+*위와 아래는 같다.*
+
+vi start.sh 수정 실행시 application-prod.properties 실행
+===========================
+#!/bin/bash
+
+JAR=sbb-0.0.1-SNAPSHOT.jar
+LOG=/home/ubuntu/sbb/sbb.log
+export Dspring.profile.active=prod
+
+nohup java -jar $JAR > $LOG 2>&1 &
+===========================
+
+// 80번 포트에서 서비스 작동 : 루트 권한으로 실행해야한다. (sudo)
+	//이렇게 80번 포트를 sudo 권한으로 실행하면 보안상 아주 큰 문제가 생긴다.
+	//http : client와 server 의 데이터 통신을 암호화 하지 않는다.
+	//https : client와 server를 암호화해서 통신한다.
+	
+	//https 설정하기가 굉장히 복잡해진다.
+	
+	//client ===⇒ Web Server(Nginx, Apache) ===⇒ WAS(Tomcat, 제우스) ==⇒ DataBase
+	
+	//요즘은 Apache보다는 Nginx가 성능과 보안이 뛰어나서 많이 사용.
+	
+sudo java -Dserver.port=80 -Dspring.properties.active=prod 
+-jar sbb-0.0.2-SNAPSHOT.jar &
+
+// sudo 로 실행하게되면 soot 계정의 홈폴더에 DataBase 파일이 생성됨. /root/local.mv.db
+
+===
+//Linux 의 계정정보를 담은 파일 : /etc/passwd
+	//cat /etc/passwd
+	//root 계정과 ubuntu 계정사이 계정은 시스템계정
+	//cat /etc/passwd | grep root (|grep ubuntu)
+//Linux 의 계정의 패스워드를 담은 파일 : /etc/shadow
+
+// AWS Ubuntu Linux에서 root 계정의 암호는 부여되어있지않다. <잠겨있다.>
+
+su -계정명	: 로그아웃하지않고 계정과 계정을 이동하는 명령어
+
+//root 계정의 암호를 부여함. (root 암호 : 대문자 + 소문자 + 특수문자 + 숫자 = 14자이상 부여)
+sudo passwd root
+===
+
+//nginx 웹 서버 설치
+sudo apt install nginx
+
+//nginx 웹서버 : 80
+홈폴더 : /var/www/html
+기본 문서 : index.html
+
+//nginx 서비스 상태 확인
+sudo systemctl status nginx
+
+
+
+======================
+<실습>
+SRV2 에서 설정 : 완료시간 6:00 까지
+Client ====> Web (Nginx) : 80 ====> WAS (Tomcat) : 9002
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
