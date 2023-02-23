@@ -35,7 +35,9 @@ public class Question {	//클래스이름 : 테이블이름
 	
 	@Column(length =200)		//200자까지 
 	private String subject;
-	@Column(columnDefinition = "TEXT")	//TEXT : 최대2GB까지 저장가능
+	//@Column(columnDefinition = "TEXT")	//TEXT : 최대2GB까지 저장가능
+	// Oracle엔 text가 없다.
+	@Column(length = 4000)
 	private String content;
 	
 	private LocalDateTime createDate;	//create_date:DB

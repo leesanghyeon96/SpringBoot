@@ -25,7 +25,8 @@ public class Answer {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) //Identity : 고유값을 넣겠다
 	private Integer id;		//primary Key(Answer), 자동증가
 	
-	@Column(columnDefinition = "TEXT")
+	//@Column(columnDefinition = "TEXT") //oracle은 text가없다. , block 이있다.
+	@Column(length = 4000)
 	private String content;
 	
 	private LocalDateTime createDate;	//create_date
