@@ -334,22 +334,47 @@ https : client 와 Server 사이의 함호화 통신 : TCP 443
 			가비아, 도레지 ( www.doregi.com ), 아이네임즈, ...
 
 
+	인터닉 : www.internic.net	<== 전 세계의 도메인을 관리하는 단체
+	
+	도메인 등록 : www.doregi.com
+	
+	DNS Server (114) : 도메인 이름을 ===> IP Adredd		ㅡ== Router 53 (AWS DNS Server)
+				   www.naver.com ====> IP Adress
+
+   				 호스트이름 + 도메인이름 	<== FQDN ( 전체 컴퓨터이름 )
+				 www.	   naver.com	(웹 서버)
+				 ftp.	   naver.com	(ftp 서버)(파일 전송 서버)
+				 smtp.	   naver.com	(메일 송신 서버)
+				 pop.	   naver.com	(메일 수신 서버)
+
+	ZONE (영역) : DNS DateBase  ( naver.com ) <= 영역을 만들땐 신청한 이름만 넣기
+		레코드(Record)) : NS, SOA		<-- 자동으로 생성됨
+		A : 호스트 이름을 IP Address로 연결 (IPv4)
+		AAAA : 호스트 이름을 IP Address로 연결 (IPv6)
+		CNAME : 호스트 이름을 다른 호스트 이름으로 연결
+		PTR : IP Address를 호스트 이름으로 연결
 
 
-   
 
 
 
 
 
+// 도커 컨테이너 삭제
+docker ps -a		: docker 위에 작동중인 모든 컨테이너를 출력
+docker stop <container ID>	: 도커 컨테이너 중지
+docker rm <contatiner ID>(고유번호)	: 컨테이너 제거
 
+// 도커 이미지 삭제
+docker images
+sudo docker rmi <contatiner ID>
 
+sudo ufw disable  // 우분투 방화벽 제거
 
-
-
-
-
-
+// 모든 도커 컨테이너 모든 도커 이미지 한번에 제거
+docker rm -f $(docker ps -a -q) && docker rmi -f $(docker images -q)
+docker ps -a -q : 올라와있는 이미지 아이디 출력
+docker images -q : 올라와이있는 이미지 출력
 
 
 
